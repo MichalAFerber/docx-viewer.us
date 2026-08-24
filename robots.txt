@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://docx-viewer.us/sitemap.xml
+Sitemap: https://docx-viewer.us/sitemap-index.xml
