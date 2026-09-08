@@ -49,7 +49,7 @@
     xml:"xml", rss:"xml", atom:"xml", graphql:"graphql", gql:"graphql"
   };
   // How each type is rendered: "tree" | "table" | "xml" | "" (source-only).
-  var RENDER_KIND = {
+  var _RENDER_KIND = {
     json:"tree", jsonc:"tree", json5:"tree", jsonld:"tree", ndjson:"tree",
     yaml:"tree", yml:"tree",
     csv:"table", tsv:"table",
@@ -288,12 +288,10 @@
   // ---------- Source plane ----------
   function doFormat(text, ext){
     var kind = FORMAT_KIND[ext];
-    try {
       if (kind === "json")  return JSON.stringify(JSON.parse(extOf(currentName)==="jsonc"?stripJsonc(text):text), null, 2);
       if (kind === "ndjson") return text.split(/\r?\n/).filter(function(l){return l.trim();}).map(function(l){ return JSON.stringify(JSON.parse(l), null, 2); }).join("\n");
       if (kind === "yaml")  return jsyaml.dump(jsyaml.load(text), { indent: 2, lineWidth: 120 });
       if (kind === "xml")   return prettyXml(text);
-    } catch (e){ throw e; }
     return text;
   }
   function prettyXml(text){
@@ -405,8 +403,8 @@
     var q = el("p", "docx-notice-sub"); q.textContent = "Your file was not uploaded anywhere.";
     box.appendChild(h); box.appendChild(p); box.appendChild(q); dataView.appendChild(box);
   }
-  function looksStructured(text){
-    var t = String(text||"").replace(/^﻿/,"").replace(/^\s+/,"").charAt(0);
+  function _looksStructured(text){
+    var t = String(text||"").replace(/^\uFEFF/,"").replace(/^\s+/,"").charAt(0);
     return t === "{" || t === "[";
   }
   function setMode(m){
